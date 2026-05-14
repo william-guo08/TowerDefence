@@ -28,4 +28,16 @@ public class Path {
         if (waypoints.size() == 1) wayIn = punto;
         wayOut = punto;
     }
+
+    public double lunghezzaTot() {
+        double length = 0;
+        for (int i = 0; i < waypoints.size()-1;i++){
+            length += waypoints.get(i).distance(waypoints.get(i+1));
+        }
+        return length;
+    }
+
+    public Point2D getPosizione(double distanzaPercorsa) {
+        if (waypoints.isEmpty()) return Point2D.ZERO;
+    }
 }

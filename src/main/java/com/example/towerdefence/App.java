@@ -11,19 +11,28 @@ import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static javafx.application.Application.launch;
 
 
-public class App{
+public class App extends Application{
     int canvas_width = 800;
     int canvas_height = 600;
+    Path path;
+    int vite = 5;
+    int ram = 100;
+    double spawn = 0;
 
-    //List<Truppa> truppe = new ArrayList<>();
+    List<Truppa> truppe = new ArrayList<>();
     List<Nemico> nemici = new ArrayList<>();
     Path percorso;
+    int waveCount = 0;
+    int MAX_ENEMIES = 30;
+    double SPAWN_INTERVAL = (1*Math.random()*5);
 
     double lastTime = 0;
+
     @Override
     public void start(Stage stage) {
 
@@ -31,7 +40,15 @@ public class App{
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         //crea lista immutabile di punti di svolta o start/end
-        percorso = new Path(List.of(new Point2D(0,300)));
+        percorso = new Path(List.of(
+                new Point2D(  0, 300),
+                new Point2D(150, 300),
+                new Point2D(150, 150),
+                new Point2D(400, 150),
+                new Point2D(400, 450),
+                new Point2D(650, 450),
+                new Point2D(650, 300),
+                new Point2D(800, 300)));
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -54,12 +71,12 @@ public class App{
         gc.fillRect(0, 0, W, H);
 
         path.draw(gc);
-        for (Nemico n : enemies) n.draw(gc);
-        for (Truppa t : truppe) t.draw(gc);
+        for (Nemico n : nemici) n.draw(gc);
+        //for (Truppa t : truppe) t.draw(gc);
         drawHUD(gc, W);
 
         // Schermata game over
-        if (pcHealth <= 0) {
+        if (vite <= 0) {
             gc.setFill(Color.rgb(0, 0, 0, 0.6));
             gc.fillRect(0, 0, W, H);
             gc.setFill(Color.RED);
@@ -77,25 +94,25 @@ public class App{
         gc.fillText("RAM: " + ram, 10, 22);
 
         gc.setFill(Color.ORANGERED);
-        gc.fillText("PC Health: " + pcHealth, 120, 22);
+        gc.fillText("PC Health: " + vite, 120, 22);
 
         gc.setFill(Color.LIGHTGRAY);
-        gc.fillText("Nemico: " + enemies.size() + "  Spawn: " + waveCount + "/" + MAX_ENEMIES, 260, 22);
+        gc.fillText("Nemico: " + nemici.size() + "  Spawn: " + waveCount + "/" + MAX_ENEMIES, 260, 22);
     };
 
     private void update(double delta) {
-        if (pcHealth <= 0) return;
+        if (vite <= 0) return;
 
         // Spawna nemici a intervalli regolari
-        spawnTimer += delta;
-        if (spawnTimer >= SPAWN_INTERVAL && waveCount < MAX_ENEMIES) {
+        spawn += delta;
+        if (spawn >= SPAWN_INTERVAL && waveCount < MAX_ENEMIES) {
             spawnEnemy();
-            spawnTimer = 0;
+            spawn = 0;
             waveCount++;
         }
 
         // Muovi nemici e rimuovi quelli morti/arrivati
-        Iterator<Nemico> it = enemies.iterator();
+        Iterator<Nemico> it = nemici.iterator();
         while (it.hasNext()) {
             Nemico n = it.next();
 
@@ -108,27 +125,28 @@ public class App{
 
             boolean reached = n.walk(path, delta);
             if (reached) {
-                pcHealth--;
+                vite--;
                 it.remove();
-                System.out.println("Nemico arrivato! PC health: " + pcHealth);
+                System.out.println("Nemico arrivato! PC health: " + vite);
             }
         }
 
         // Truppa attaccano il nemico più vicino
         for (Truppa t : truppe) {
             if (!t.isAlive()) continue;
-            Nemico bersaglio = t.target(enemies);
+            Nemico bersaglio = t.target(nemici);
             t.attack(bersaglio, delta);
         }
     }
     private void spawnEnemy() {
         Nemico n = switch (waveCount % 4) {
-            case 0 -> new Nemico( 60,  80,  5, 10, new String[]{},        "Worm");
-            case 1 -> new Nemico(120,  50,  8, 20, new String[]{"slow"},   "Trojan");
-            case 2 -> new Nemico( 80,  60,  6, 15, new String[]{"block"},  "Adware");
-            default-> new Nemico(200,  40, 12, 30, new String[]{"lock"},   "Ransomware");
+            case 0 -> new Nemico( 60,  80,  5, 10,"Worm");
+            case 1 -> new Nemico(120,  50,  8, 20,"Trojan");
+            case 2 -> new Nemico( 80,  60,  6, 15, "Adware");
+            default-> new Nemico(200,  40, 12, 30, "Ransomware");
         };
-        enemies.add(n);
+        //int health, int atk, double speed, int goldDrop, String role
+        nemici.add(n);
         System.out.println("Spawn: " + n.getRole());
     }
 

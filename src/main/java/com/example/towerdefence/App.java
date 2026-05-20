@@ -3,6 +3,7 @@ package com.example.towerdefence;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.Scene;
@@ -19,7 +20,6 @@ import static javafx.application.Application.launch;
 public class App extends Application{
     int canvas_width = 800;
     int canvas_height = 600;
-    Path path;
     int vite = 5;
     int ram = 100;
     double spawn = 0;
@@ -49,30 +49,39 @@ public class App extends Application{
                 new Point2D(650, 450),
                 new Point2D(650, 300),
                 new Point2D(800, 300)));
+        //3 truppe aggiunte al percorso
+        truppe.add(new Truppa(100, 15, 1.0, 30, "Firewall", new Point2D(270, 150)));
+        truppe.add(new Truppa(80, 25, 1.5, 40, "AntivirusScanner", new Point2D(400, 310)));
+        truppe.add(new Truppa(60, 10, 0.8, 20, "Sandbox", new Point2D(530, 450)));
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 if (lastTime == 0) {
-                    lastTime= now;
+                    lastTime = now;
                     return;
                 };
-                double delta = (now-lastTime)/1_000_000_000.0;
+                double delta = (now-lastTime)/1_000_000_000;
                 lastTime = now;
                 update(delta);
                 render(gc, canvas_width, canvas_height);
 
             }
         };
+        timer.start();
+        javafx.scene.Group root = new Group(canvas);
+        stage.setScene(new Scene(root, canvas_width, canvas_height));
+        stage.setTitle("Tower Defence");
+        stage.show();
     };
 
     private void render(GraphicsContext gc, int W, int H) {
         gc.setFill(Color.rgb(20, 20, 35));
         gc.fillRect(0, 0, W, H);
 
-        path.draw(gc);
-        for (Nemico n : nemici) n.draw(gc);
-        //for (Truppa t : truppe) t.draw(gc);
+        percorso.draw(gc);
+        for (Nemico n : nemici) n.draw(gc);     //disegna i nemici
+        for (Truppa t : truppe) t.draw(gc);     //disegna le truppe
         drawHUD(gc, W);
 
         // Schermata game over
@@ -123,8 +132,8 @@ public class App extends Application{
                 continue;
             }
 
-            boolean reached = n.walk(path, delta);
-            if (reached) {
+            boolean raggiunto = n.walk(percorso, delta);
+            if (raggiunto) {
                 vite--;
                 it.remove();
                 System.out.println("Nemico arrivato! PC health: " + vite);
@@ -140,9 +149,9 @@ public class App extends Application{
     }
     private void spawnEnemy() {
         Nemico n = switch (waveCount % 4) {
-            case 0 -> new Nemico( 60,  80,  5, 10,"Worm");
+            case 0 -> new Nemico( 140,  80,  5, 10,"Worm");
             case 1 -> new Nemico(120,  50,  8, 20,"Trojan");
-            case 2 -> new Nemico( 80,  60,  6, 15, "Adware");
+            case 2 -> new Nemico( 110,  60,  6, 15, "Adware");
             default-> new Nemico(200,  40, 12, 30, "Ransomware");
         };
         //int health, int atk, double speed, int goldDrop, String role

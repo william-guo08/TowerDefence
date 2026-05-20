@@ -23,7 +23,7 @@ public class Nemico {
     }
 
     public boolean walk(Path path, double delta) {
-        distanzaPercorsa += speed * delta;
+        distanzaPercorsa += speed * (delta*5);
         posizione = path.getPosizione(distanzaPercorsa);
 
         if (distanzaPercorsa >= path.lunghezzaTot()) {
@@ -33,8 +33,7 @@ public class Nemico {
         return false;
     }
 
-
-    public void takeDamage(int damage) {
+    public void subisciDanno(int damage) {
         health -= damage;
         if (health <= 0) {
             health = 0;
@@ -42,6 +41,7 @@ public class Nemico {
         }
     }
 
+    //attacca una truppa
     public void attack(Truppa t) {
         t.setHealth(t.getHealth() - atk);
     }
@@ -58,16 +58,20 @@ public class Nemico {
     public void draw(GraphicsContext gc) {
         if (posizione == null || !alive) return;
 
+        //disegna i nemici come palline arancioni
         gc.setFill(Color.ORANGERED);
         gc.fillOval(posizione.getX() - 12, posizione.getY() - 12, 24, 24);
 
-        // Barra della vita
+        //Disegna barra della vita sopra i nemici
         double maxBarW = 28;
         double barW = maxBarW * ((double) health / getMaxHealth());
         gc.setFill(Color.DARKRED);
         gc.fillRect(posizione.getX() - 14, posizione.getY() - 20, maxBarW, 4);
         gc.setFill(Color.LIMEGREEN);
         gc.fillRect(posizione.getX() - 14, posizione.getY() - 20, barW, 4);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+        gc.strokeRect(posizione.getX()-14, posizione.getY()-20, maxBarW+1,5);
 
         gc.setFill(Color.WHITE);
         gc.fillText(role, posizione.getX() - 10, posizione.getY() + 4);

@@ -41,11 +41,6 @@ public class Nemico {
         }
     }
 
-    //attacca una truppa
-    public void attack(Truppa t) {
-        t.setHealth(t.getHealth() - atk);
-    }
-
     //Chiamato quando il nemico viene eliminato: stampa il drop.
     public void defeat() {
         System.out.println(role + " sconfitto! +" + goldDrop + " RAM.");

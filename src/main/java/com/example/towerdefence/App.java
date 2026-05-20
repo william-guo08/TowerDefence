@@ -41,7 +41,7 @@ public class App extends Application{
 
         //crea lista immutabile di punti di svolta o start/end
         percorso = new Path(List.of(
-                new Point2D(  0, 300),
+                new Point2D(0, 300),
                 new Point2D(150, 300),
                 new Point2D(150, 150),
                 new Point2D(400, 150),
@@ -50,9 +50,9 @@ public class App extends Application{
                 new Point2D(650, 300),
                 new Point2D(800, 300)));
         //3 truppe aggiunte al percorso
-        truppe.add(new Truppa(100, 15, 1.0, 30, "Firewall", new Point2D(270, 150)));
-        truppe.add(new Truppa(80, 25, 1.5, 40, "AntivirusScanner", new Point2D(400, 310)));
-        truppe.add(new Truppa(60, 10, 0.8, 20, "Sandbox", new Point2D(530, 450)));
+        truppe.add(new Firewall(15, 1.0, new Point2D(270, 150)));
+        truppe.add(new Truppa(25, 1.5,  "AntivirusScanner", new Point2D(400, 310)));
+        truppe.add(new Truppa(10, 0.8,  "Sandbox", new Point2D(530, 450)));
 
         AnimationTimer timer = new AnimationTimer() {
             @Override

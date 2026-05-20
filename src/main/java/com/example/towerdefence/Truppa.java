@@ -3,24 +3,19 @@ package com.example.towerdefence;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.image.*;
 
 public class Truppa {
-    private int health;
-    private int atk;
-    private double atkSpeed;   // attacchi al secondo
-    private int value;         // costo in RAM
-    private String role;
+    protected int atk;
+    protected double atkSpeed;   // attacchi al secondo
+    protected String role;
+    protected Point2D position;
+    protected double cooldown = 0;
+    protected Image sprite;
 
-    private Point2D position;
-    private double cooldown = 0;
-
-
-    public Truppa(int health, int atk,
-                  double atkSpeed, int value, String role, Point2D position) {
-        this.health   = health;
+    public Truppa(int atk, double atkSpeed, String role, Point2D position) {
         this.atk      = atk;
         this.atkSpeed = atkSpeed;
-        this.value    = value;
         this.role     = role;
         this.position = position;
     }
@@ -40,37 +35,31 @@ public class Truppa {
         return nearest;
     }
 
-    /**
-     * Attacca il nemico bersaglio se il cooldown è esaurito.
-     * @param enemy  nemico da colpire
-     * @param delta  secondi trascorsi dall'ultimo frame
-     */
     public void attack(Nemico enemy, double delta) {
         if (enemy == null) return;
         cooldown -= delta;
         if (cooldown <= 0) {
-            enemy.takeDamage(atk);
+            enemy.subisciDanno(atk);
             cooldown = 1.0 / atkSpeed;
         }
     }
 
-    /** Rimuove la torretta (rimborso/vendita). */
-    public void sold() {
-        health = 0;
-        System.out.println(role + " venduta per " + (value / 2) + " RAM.");
-    }
 
-    /** Disegna la torretta sul canvas. */
+    //Disegna la torretta sul canvas.
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.STEELBLUE);
-        gc.fillRect(position.getX() - 18, position.getY() - 18, 36, 36);
-        gc.setFill(Color.WHITE);
-        gc.fillText(role, position.getX() - 16, position.getY() + 4);
+        if (sprite != null) {
+            gc.drawImage(sprite, position.getX() -18, position.getY() -18, 50,40);
+        } else {
+            gc.setFill(Color.STEELBLUE);
+            gc.fillRect(position.getX() - 18, position.getY() - 18, 36, 36);
+            gc.setFill(Color.WHITE);
+            gc.fillText(role, position.getX() - 16, position.getY() + 4);
+        }
+
     }
 
+    public boolean isAlive() { return true; }
 
-    public boolean isAlive() { return health > 0; }
-    public int getHealth() { return health; }
-    public void setHealth(int health) { this.health = health; }
+    public void setPosition(Point2D position) { this.position = position; }
+    //public void setHealth(int health)         { this.health = health; }
 }
-

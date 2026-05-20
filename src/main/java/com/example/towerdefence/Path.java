@@ -9,9 +9,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class Path {
-    private Point2D wayIn;
-    private Point2D wayOut;
-    private List<Point2D> waypoints;
+    private Point2D wayIn;  //entrata
+    private Point2D wayOut; //uscita
+    private List<Point2D> waypoints;    //lista di punti/angoli
 
     public Path(){
         this.waypoints = new ArrayList<>();
@@ -42,7 +42,6 @@ public class Path {
 
     public Point2D getPosizione(double distanzaPercorsa) {
         if (waypoints.isEmpty()) return Point2D.ZERO;
-
         double rimanente = distanzaPercorsa;
 
         for (int i = 0; i < waypoints.size()-1; i++){

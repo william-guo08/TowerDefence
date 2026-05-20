@@ -39,4 +39,36 @@ public class Truppa {
         }
         return nearest;
     }
+
+    /**
+     * Attacca il nemico bersaglio se il cooldown è esaurito.
+     * @param enemy  nemico da colpire
+     * @param delta  secondi trascorsi dall'ultimo frame
+     */
+    public void attack(Nemico enemy, double delta) {
+        if (enemy == null) return;
+        cooldown -= delta;
+        if (cooldown <= 0) {
+            enemy.takeDamage(atk);
+            cooldown = 1.0 / atkSpeed;
+        }
+    }
+
+    /** Rimuove la torretta (rimborso/vendita). */
+    public void sold() {
+        health = 0;
+        System.out.println(role + " venduta per " + (value / 2) + " RAM.");
+    }
+
+    /** Disegna la torretta sul canvas. */
+    public void draw(GraphicsContext gc) {
+        gc.setFill(Color.STEELBLUE);
+        gc.fillRect(position.getX() - 18, position.getY() - 18, 36, 36);
+        gc.setFill(Color.WHITE);
+        gc.fillText(role, position.getX() - 16, position.getY() + 4);
+    }
+
+
+
+
 }

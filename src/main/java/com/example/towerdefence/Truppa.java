@@ -69,6 +69,8 @@ public class Truppa {
     }
 
 
-
-
+    public boolean isAlive() { return health > 0; }
+    public int getHealth() { return health; }
+    public void setHealth(int health) { this.health = health; }
 }
+

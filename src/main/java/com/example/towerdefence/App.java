@@ -51,8 +51,8 @@ public class App extends Application{
                 new Point2D(800, 300)));
         //3 truppe aggiunte al percorso
         truppe.add(new Firewall(15, 1.0, new Point2D(270, 150)));
-        truppe.add(new Truppa(25, 1.5,  "AntivirusScanner", new Point2D(400, 310)));
-        truppe.add(new Truppa(10, 0.8,  "Sandbox", new Point2D(530, 450)));
+        truppe.add(new AntivirusScanner(25, 1.5, new Point2D(400, 310)));
+        truppe.add(new Sandbox(10, 0.8, new Point2D(530, 450)));
 
         AnimationTimer timer = new AnimationTimer() {
             @Override

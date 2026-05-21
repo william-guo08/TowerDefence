@@ -12,5 +12,4 @@ public class AntivirusScanner extends Truppa{
             System.out.println("Sprite per 'AntivirusScanner' non trovata");
         }
     };
-
-}
+};

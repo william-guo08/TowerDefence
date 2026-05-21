@@ -31,6 +31,7 @@ public class App extends Application{
     int MAX_ENEMIES = 30;
     double SPAWN_INTERVAL = (1*Math.random()*5);
 
+
     double lastTime = 0;
 
     @Override
@@ -38,6 +39,7 @@ public class App extends Application{
 
         Canvas canvas = new Canvas(canvas_width, canvas_height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setImageSmoothing(false);
 
         //crea lista immutabile di punti di svolta o start/end
         percorso = new Path(List.of(

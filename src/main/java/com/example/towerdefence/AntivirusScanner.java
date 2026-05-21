@@ -5,11 +5,11 @@ import javafx.geometry.Point2D;
 
 public class AntivirusScanner extends Truppa{
     public AntivirusScanner(int atk, double atkSpeed, Point2D position) {
-        super(atk, atkSpeed,  "Firewall", position);
+        super(atk, atkSpeed,  "AntivirusScanner", position);
         try {
             this.sprite = new Image(getClass().getResourceAsStream("/com/example/towerdefence/firewall.png"));
         } catch (Exception e) {
-            System.out.println("Sprite per 'Firewall' non trovata");
+            System.out.println("Sprite per 'AntivirusScanner' non trovata");
         }
     };
 
